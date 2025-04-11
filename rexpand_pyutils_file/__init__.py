@@ -16,7 +16,7 @@ from rexpand_pyutils_file.file_system import (
     refine_path,
 )
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 __all__ = [
     "FileSystem",
