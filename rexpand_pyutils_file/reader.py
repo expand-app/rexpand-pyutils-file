@@ -15,7 +15,7 @@ def read_json(
     file_path: str,
     verbose=DEFAULT_VERBOSE,
     encoding=DEFAULT_ENCODING,
-    json_load_extra_args=None,
+    json_load_extra_args={},
 ):
     data = None
 
