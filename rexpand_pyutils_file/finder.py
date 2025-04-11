@@ -28,7 +28,6 @@ def get_file_paths(
                 if path.isfile(join(folder_path, file_name))
                 and file_name not in ignored_file_set
             ],
-            key=lambda x: x.split("/")[-1],
         )
     else:
 
@@ -46,9 +45,18 @@ def get_file_paths(
                     )
             return file_paths
 
+        # Get all file paths
+        file_paths = internal_get_file_paths(folder_path, ignored_file_set)
+
+        # Sort by the number of path separators (indicating nesting depth)
+        # More separators = more nested = higher priority
+        # Use character ranking as secondary sorting key
         return sorted(
-            internal_get_file_paths(folder_path, ignored_file_set),
-            key=lambda x: x.split("/")[-1],
+            file_paths,
+            key=lambda x: (
+                -x.count(path.sep),
+                x,
+            ),  # Negative count for reverse order, then lexicographical sort
         )
 
 
