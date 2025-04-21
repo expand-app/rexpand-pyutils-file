@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "rexpand-pyutils-file"
-version = "0.0.4"
+version = "0.0.5"
 description = "Python utilities for file system operations"
 readme = "README.md"
 authors = [

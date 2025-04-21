@@ -84,6 +84,7 @@ def read_csv(
     encoding=DEFAULT_ENCODING,
     filter_na: bool = False,
     replace_na: bool = True,
+    strip_bom: bool = True,
 ) -> list[dict] | None:
     data = None
 
@@ -105,6 +106,34 @@ def read_csv(
                 quoting=quoting,
                 strict=strict,
             )
+
+            # Handle BOM character in column names if needed
+            if strip_bom:
+                # Get the fieldnames and strip BOM from them
+                fieldnames = spamreader.fieldnames
+                if fieldnames and any(name.startswith("\ufeff") for name in fieldnames):
+                    # Create a mapping of original names to cleaned names
+                    name_mapping = {
+                        name: name.replace("\ufeff", "") for name in fieldnames
+                    }
+                    # Create a new DictReader with cleaned fieldnames
+                    spamreader = csv.DictReader(
+                        csvfile,
+                        fieldnames=[name_mapping[name] for name in fieldnames],
+                        delimiter=delimiter,
+                        quotechar=quotechar,
+                        escapechar=escapechar,
+                        doublequote=doublequote,
+                        skipinitialspace=skipinitialspace,
+                        lineterminator=lineterminator,
+                        quoting=quoting,
+                        strict=strict,
+                    )
+                    # Reset file pointer to beginning
+                    csvfile.seek(0)
+                    # Skip header row
+                    next(spamreader)
+
             data = [row for row in spamreader]
 
             if filter_na:
